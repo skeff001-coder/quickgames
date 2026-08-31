@@ -1,73 +1,44 @@
 workflows:
-  ios-app:
+  default:
     name: Quick Games iOS Build
     max_build_duration: 60
     instance_type: mac_mini
     
     environment:
-      ios: latest
       xcode: latest
-      variables:
-        BUNDLE_ID: "com.onjjem.quickgames"
-        APP_NAME: "Quick Games"
-        SCHEME: "QuickGames"
-    
+      groups:
+        - app_store_credentials
+
     scripts:
-      - name: Get provisioning profiles and certificates
-        script: |
-          app-store-connect fetch-signing-files $BUNDLE_ID \
-            --type IOS_APP_ADHOC \
-            --create
-
-      - name: Get provisioning profiles and certificates for push notifications
-        script: |
-          app-store-connect fetch-signing-files $BUNDLE_ID \
-            --type IOS_APP_PUSH \
-            --create
-
-      - name: Build IPA
+      - name: Build for Testing
         script: |
           xcodebuild build-for-testing \
-            -workspace QuickGames.xcworkspace \
-            -scheme $SCHEME \
+            -workspace ios/Runner.xcworkspace \
+            -scheme Runner \
             -configuration Release \
-            -derivedDataPath build/ios_build \
-            -sdk iphoneos \
-            -destination 'generic/platform=iOS' \
-            -allowProvisioningUpdates
+            -derivedDataPath build/ios_build
 
-          xcodebuild -workspace QuickGames.xcworkspace \
-            -scheme $SCHEME \
-            -archivePath $HOME/Downloads/app.xcarchive \
+      - name: Build IPA for App Store
+        script: |
+          xcodebuild -workspace ios/Runner.xcworkspace \
+            -scheme Runner \
+            -archivePath build/app.xcarchive \
             -configuration Release \
             -sdk iphoneos \
-            -derivedDataPath build/ios_build \
             -allowProvisioningUpdates \
             archive
 
           xcodebuild -exportArchive \
-            -archivePath $HOME/Downloads/app.xcarchive \
-            -exportPath $HOME/Downloads/ipa \
-            -exportOptionsPlist ios/ExportOptions.plist
+            -archivePath build/app.xcarchive \
+            -exportPath build/ipa \
+            -exportOptionsPlist ios/ExportOptions.plist \
+            -allowProvisioningUpdates
 
     artifacts:
-      - $HOME/Downloads/ipa/*.ipa
-      - build/ios_build/Release-iphoneos/*.app
+      - build/ipa/*.ipa
+      - build/app.xcarchive
 
     publishing:
       app_store_connect:
         auth: integration
-        
-        # Set these in Codemagic UI under App Credentials
-        key_identifier: $APP_STORE_KEY_ID
-        issuer_id: $APP_STORE_ISSUER_ID
-        key_content: $APP_STORE_PRIVATE_KEY
-        
         submit_to_testflight: true
-        submit_to_app_store: false
-        
-        # Create this beta group in App Store Connect first
-        beta_groups:
-          - "Quick Games Testers"
-        
-        changelog: "Quick Games - Make games in 90 seconds. Share with friends via QR code."
