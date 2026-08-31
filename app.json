@@ -13,11 +13,12 @@
       }
     },
     "ios": {
-      "bundleIdentifier": "com.onjjem.quickgames",
-      "buildNumber": "1",
-      "supportsTablet": false
-    },
-    "plugins": []
+  "bundleIdentifier": "com.onjjem.quickgames",
+  "buildNumber": "1",
+  "supportsTablet": false,
+  "infoPlist": {
+    "ITSAppUsesNonExemptEncryption": false
   }
 }
+
 
