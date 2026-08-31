@@ -1,0 +1,73 @@
+workflows:
+  ios-app:
+    name: Quick Games iOS Build
+    max_build_duration: 60
+    instance_type: mac_mini
+    
+    environment:
+      ios: latest
+      xcode: latest
+      variables:
+        BUNDLE_ID: "com.onjjem.quickgames"
+        APP_NAME: "Quick Games"
+        SCHEME: "QuickGames"
+    
+    scripts:
+      - name: Get provisioning profiles and certificates
+        script: |
+          app-store-connect fetch-signing-files $BUNDLE_ID \
+            --type IOS_APP_ADHOC \
+            --create
+
+      - name: Get provisioning profiles and certificates for push notifications
+        script: |
+          app-store-connect fetch-signing-files $BUNDLE_ID \
+            --type IOS_APP_PUSH \
+            --create
+
+      - name: Build IPA
+        script: |
+          xcodebuild build-for-testing \
+            -workspace QuickGames.xcworkspace \
+            -scheme $SCHEME \
+            -configuration Release \
+            -derivedDataPath build/ios_build \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -allowProvisioningUpdates
+
+          xcodebuild -workspace QuickGames.xcworkspace \
+            -scheme $SCHEME \
+            -archivePath $HOME/Downloads/app.xcarchive \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build/ios_build \
+            -allowProvisioningUpdates \
+            archive
+
+          xcodebuild -exportArchive \
+            -archivePath $HOME/Downloads/app.xcarchive \
+            -exportPath $HOME/Downloads/ipa \
+            -exportOptionsPlist ios/ExportOptions.plist
+
+    artifacts:
+      - $HOME/Downloads/ipa/*.ipa
+      - build/ios_build/Release-iphoneos/*.app
+
+    publishing:
+      app_store_connect:
+        auth: integration
+        
+        # Set these in Codemagic UI under App Credentials
+        key_identifier: $APP_STORE_KEY_ID
+        issuer_id: $APP_STORE_ISSUER_ID
+        key_content: $APP_STORE_PRIVATE_KEY
+        
+        submit_to_testflight: true
+        submit_to_app_store: false
+        
+        # Create this beta group in App Store Connect first
+        beta_groups:
+          - "Quick Games Testers"
+        
+        changelog: "Quick Games - Make games in 90 seconds. Share with friends via QR code."
