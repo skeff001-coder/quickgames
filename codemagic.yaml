@@ -2,7 +2,6 @@ workflows:
   default:
     name: Quick Games iOS Build
     max_build_duration: 60
-    instance_type: mac_pro
     
     environment:
       xcode: latest
