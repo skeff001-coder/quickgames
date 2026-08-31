@@ -11,8 +11,7 @@
       "buildNumber": "1",
       "supportsTablet": false
     },
-    "plugins": [
-      "expo-router"
-    ]
+    "plugins": []
   }
 }
+
