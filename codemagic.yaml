@@ -6,39 +6,15 @@ workflows:
     
     environment:
       xcode: latest
-      groups:
-        - app_store_credentials
 
     scripts:
-      - name: Build for Testing
+      - name: Build iOS App
         script: |
-          xcodebuild build-for-testing \
-            -workspace ios/Runner.xcworkspace \
-            -scheme Runner \
+          xcodebuild build \
+            -workspace QuickGames.xcworkspace \
+            -scheme QuickGames \
             -configuration Release \
             -derivedDataPath build/ios_build
 
-      - name: Build IPA for App Store
-        script: |
-          xcodebuild -workspace ios/Runner.xcworkspace \
-            -scheme Runner \
-            -archivePath build/app.xcarchive \
-            -configuration Release \
-            -sdk iphoneos \
-            -allowProvisioningUpdates \
-            archive
-
-          xcodebuild -exportArchive \
-            -archivePath build/app.xcarchive \
-            -exportPath build/ipa \
-            -exportOptionsPlist ios/ExportOptions.plist \
-            -allowProvisioningUpdates
-
     artifacts:
-      - build/ipa/*.ipa
-      - build/app.xcarchive
-
-    publishing:
-      app_store_connect:
-        auth: integration
-        submit_to_testflight: true
+      - build/ios_build/Build/Products/Release-iphoneos/*.app
