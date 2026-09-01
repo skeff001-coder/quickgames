@@ -5,22 +5,19 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal",
-      "clearCalcCache": true
+      "distribution": "internal"
     },
     "preview": {
       "distribution": "internal",
       "ios": {
         "simulator": false
-      },
-      "clearCalcCache": true
+      }
     },
     "production": {
       "ios": {
         "autoIncrement": true,
         "image": "latest"
-      },
-      "clearCalcCache": true
+      }
     }
   }
 }
