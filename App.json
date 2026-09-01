@@ -3,7 +3,6 @@
     "name": "Quick Games",
     "slug": "quickgames-",
     "version": "1.0.0",
-    "runtimeVersion": "54.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "backgroundColor": "#0F1419",
