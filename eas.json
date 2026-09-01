@@ -3,20 +3,9 @@
     "version": ">= 5.9.0"
   },
   "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal"
-    },
-    "preview": {
-      "distribution": "internal",
-      "ios": {
-        "simulator": false
-      }
-    },
     "production": {
       "ios": {
-        "autoIncrement": true,
-        "image": "latest"
+        "autoIncrement": "buildNumber"
       }
     }
   }
