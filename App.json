@@ -1,14 +1,14 @@
 {
   "expo": {
     "name": "Quick Games",
-    "slug": "quickgames-",
+    "slug": "quickgames3",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "backgroundColor": "#0F1419",
     "extra": {
       "eas": {
-        "projectId": "5c3df5ad-3d43-488a-8aae-7f73c7195dc9"
+        "projectId": "PASTE_NEW_PROJECT_ID_HERE"
       }
     },
     "ios": {
