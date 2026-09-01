@@ -3,10 +3,6 @@
     "version": ">= 5.9.0"
   },
   "build": {
-    "production": {
-      "ios": {
-        "autoIncrement": "buildNumber"
-      }
-    }
+    "production": {}
   }
 }
